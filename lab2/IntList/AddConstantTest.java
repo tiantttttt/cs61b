@@ -27,9 +27,9 @@ public class AddConstantTest {
     }
 
     @Test
-    public void testAddMinus() {
-        IntList lst = IntList.of(1);
-        IntListExercises.addConstant(lst, 1);
-        assertEquals("2", lst.toString());
+    public void testAddHidden() {
+        IntList lst = IntList.of(1, 2);
+        IntListExercises.addConstant(lst, -2);
+        assertEquals("-1 -> 0", lst.toString());
     }
 }
