@@ -2,6 +2,7 @@ package game2048;
 
 import java.util.Formatter;
 import java.util.Observable;
+import java.util.ArrayList;
 
 
 /** The state of a game of 2048.
@@ -106,6 +107,30 @@ public class Model extends Observable {
      *    value, then the leading two tiles in the direction of motion merge,
      *    and the trailing tile does not.
      * */
+
+    //从上到下输出不含零的数列
+    public ArrayList colZeroErased(Board board, int c, int r){
+        ArrayList list = new ArrayList();
+        for (int row = 3; row > r; row--){
+            if (this.tile(c, row) != null){
+                list.add(this.tile(c, row).value());
+            }
+        }
+        return list;
+    }
+
+    public void row2(Board board, int c, int r) {
+        System.out.println(colZeroErased(board, c, r));
+    }
+
+    public void row1(Board board, int c, int r) {
+        System.out.println(colZeroErased(board, c, r));
+    }
+
+    public void row0(Board board, int c, int r) {
+        System.out.println(colZeroErased(board, c, r));
+    }
+
     public boolean tilt(Side side) {
         boolean changed;
         changed = false;
@@ -113,6 +138,22 @@ public class Model extends Observable {
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
+        for (int c = 0; c < board.size(); c++){
+            for (int r = 3; r > -1; r--){
+                if (board.tile(c, r) != null){
+                    int rTest = 3 - colZeroErased(board, c, r).size(); //检测清零后是第几行
+                    if (rTest == 2){
+                        row2(board, c, r);
+                    }
+                    if (rTest == 1){
+                        row1(board, c, r);
+                                            }
+                    if (rTest == 0){
+                        row0(board, c, r);
+                    }
+                }
+            }
+        }
 
         checkGameOver();
         if (changed) {
@@ -120,6 +161,7 @@ public class Model extends Observable {
         }
         return changed;
     }
+
 
     /** Checks if the game is over and sets the gameOver variable
      *  appropriately.
