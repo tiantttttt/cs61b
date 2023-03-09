@@ -109,26 +109,111 @@ public class Model extends Observable {
      * */
 
     //从上到下输出不含零的数列
-    public ArrayList colZeroErased(Board board, int c, int r){
-        ArrayList list = new ArrayList();
+    public ArrayList<Integer> colZeroErased(int[][] keep, int c, int r){
+        ArrayList<Integer> list = new ArrayList<>();
         for (int row = 3; row > r; row--){
-            if (this.tile(c, row) != null){
-                list.add(this.tile(c, row).value());
+            if (keep[c][row] != 0){
+                list.add(keep[c][row]);
             }
         }
         return list;
     }
-
-    public void row2(Board board, int c, int r) {
-        System.out.println(colZeroErased(board, c, r));
+    public boolean row3(Board board, int c, int r, ArrayList<Integer> list, int[][] keep) {
+        int moveNum = board.size() - r - 1 -list.size();
+        if (moveNum > 0){
+            Tile t = board.tile(c, r);
+            scoring(board.move(c, r + moveNum, t), c, r, keep);
+            return true;
+        }
+        return false;
     }
 
-    public void row1(Board board, int c, int r) {
-        System.out.println(colZeroErased(board, c, r));
+    public boolean row2(Board board, int c, int r, ArrayList<Integer> list, int[][] keep) {
+        int zeroNum = board.size() - r - 1 -list.size();
+        int moveNum;
+        if (list.get(0) == board.tile(c, r).value()){
+            moveNum = 1 + zeroNum;
+        }else {
+            moveNum = zeroNum;
+        }
+        if (moveNum > 0){
+            Tile t = board.tile(c, r);
+            scoring(board.move(c, r + moveNum, t), c, r, keep);
+            return true;
+        }
+        return false;
     }
 
-    public void row0(Board board, int c, int r) {
-        System.out.println(colZeroErased(board, c, r));
+    public boolean row1(Board board, int c, int r, ArrayList<Integer> list, int[][] keep) {
+        int zeroNum = board.size() - r - 1 -list.size();
+        int moveNum;
+        if (list.get(0) == list.get(1) || list.get(1) == board.tile(c, r).value()){
+            moveNum = 1 + zeroNum;
+        }else {
+            moveNum = zeroNum;
+        }
+        if (moveNum > 0){
+            Tile t = board.tile(c, r);
+            scoring(board.move(c, r + moveNum, t), c, r, keep);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean row0(Board board, int c, int r, ArrayList<Integer> list, int[][] keep) {
+       int moveNum = 0;
+        if (list.get(0) == list.get(1) && list.get(2) == board.tile(c, r).value()){
+            moveNum = 2;
+        }
+        if (list.get(0) == list.get(1) | list.get(2) == board.tile(c, r).value()){
+            moveNum = 1;
+        }
+        if (moveNum > 0){
+            Tile t = board.tile(c, r);
+            scoring(board.move(c, r + moveNum, t), c, r, keep);
+            return true;
+        }
+        return false;
+    }
+
+    public int[][] clone(Board board){
+        int[][] keep = new int[board.size()][board.size()];
+        for (int c = 0; c < board.size(); c++){
+            for (int r = 0; r < board.size(); r++){
+                if (board.tile(c, r) == null){
+                    keep[c][r] = 0;
+                }else {
+                    keep[c][r] = board.tile(c, r).value();
+                }
+            }
+        }
+        return keep;
+    }
+    public void scoring(boolean mv, int c, int r,int[][] keep){
+        if (mv){
+            score += 2 * keep[c][r];
+        }
+    }
+
+    public boolean north(int[][] keep){
+        boolean changed = false;
+        for (int c = 0; c < board.size(); c++){
+            for (int r = 3; r > -1; r--){
+                if (keep[c][r] != 0){
+                    int rTest = 3 - colZeroErased(keep, c, r).size(); //检测清零后是第几行
+                    if (rTest == 3){
+                        changed = row3(board, c, r, colZeroErased(keep, c, r), keep);
+                    }else if (rTest == 2){
+                        changed = row2(board, c, r, colZeroErased(keep, c, r), keep);
+                    }else if (rTest == 1){
+                        changed = row1(board, c, r, colZeroErased(keep, c, r), keep);
+                    }else if (rTest == 0){
+                        changed = row0(board, c, r, colZeroErased(keep, c, r), keep);
+                    }
+                }
+            }
+        }
+        return changed;
     }
 
     public boolean tilt(Side side) {
@@ -138,21 +223,24 @@ public class Model extends Observable {
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
-        for (int c = 0; c < board.size(); c++){
-            for (int r = 3; r > -1; r--){
-                if (board.tile(c, r) != null){
-                    int rTest = 3 - colZeroErased(board, c, r).size(); //检测清零后是第几行
-                    if (rTest == 2){
-                        row2(board, c, r);
-                    }
-                    if (rTest == 1){
-                        row1(board, c, r);
-                                            }
-                    if (rTest == 0){
-                        row0(board, c, r);
-                    }
-                }
-            }
+        if (side == Side.NORTH){
+            int[][] keep = clone(board);
+            changed = north(keep);
+        }else if (side == Side.EAST){
+            board.setViewingPerspective(Side.EAST);
+            int[][] keep = clone(board);
+            changed = north(keep);
+            board.setViewingPerspective(Side.NORTH);
+        }else if (side == Side.WEST){
+            board.setViewingPerspective(Side.WEST);
+            int[][] keep = clone(board);
+            changed = north(keep);
+            board.setViewingPerspective(Side.NORTH);
+        }else if (side == Side.SOUTH){
+            board.setViewingPerspective(Side.SOUTH);
+            int[][] keep = clone(board);
+            changed = north(keep);
+            board.setViewingPerspective(Side.NORTH);
         }
 
         checkGameOver();
@@ -161,6 +249,8 @@ public class Model extends Observable {
         }
         return changed;
     }
+
+
 
 
     /** Checks if the game is over and sets the gameOver variable
@@ -216,6 +306,8 @@ public class Model extends Observable {
      * 1. There is at least one empty space on the board.
      * 2. There are two adjacent tiles with the same value.
      */
+
+    //something is wrong
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
         for (int i = 0; i < b.size(); i++){
