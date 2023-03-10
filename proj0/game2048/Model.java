@@ -164,8 +164,7 @@ public class Model extends Observable {
        int moveNum = 0;
         if (list.get(0) == list.get(1) && list.get(2) == board.tile(c, r).value()){
             moveNum = 2;
-        }
-        if (list.get(0) == list.get(1) | list.get(2) == board.tile(c, r).value()){
+        }else if (list.get(0) == list.get(1) | list.get(2) == board.tile(c, r).value()){
             moveNum = 1;
         }
         if (moveNum > 0){
@@ -202,13 +201,13 @@ public class Model extends Observable {
                 if (keep[c][r] != 0){
                     int rTest = 3 - colZeroErased(keep, c, r).size(); //检测清零后是第几行
                     if (rTest == 3){
-                        changed = row3(board, c, r, colZeroErased(keep, c, r), keep);
+                        changed = changed | row3(board, c, r, colZeroErased(keep, c, r), keep);
                     }else if (rTest == 2){
-                        changed = row2(board, c, r, colZeroErased(keep, c, r), keep);
+                        changed = changed | row2(board, c, r, colZeroErased(keep, c, r), keep);
                     }else if (rTest == 1){
-                        changed = row1(board, c, r, colZeroErased(keep, c, r), keep);
+                        changed = changed | row1(board, c, r, colZeroErased(keep, c, r), keep);
                     }else if (rTest == 0){
-                        changed = row0(board, c, r, colZeroErased(keep, c, r), keep);
+                        changed = changed | row0(board, c, r, colZeroErased(keep, c, r), keep);
                     }
                 }
             }
@@ -310,21 +309,21 @@ public class Model extends Observable {
     //something is wrong
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
-        for (int i = 0; i < b.size(); i++){
-            for (int j = 0; j < b.size(); j++){
-                if (b.tile(i, j) == null){
+        for (int c = 0; c < b.size(); c++){
+            for (int r = 0; r < b.size(); r++){
+                if (b.tile(c, r) == null){
                     return true;
                 }
-                if (i < 0 && b.tile(i - 1, j).value() == b.tile(i, j).value()){
+                if (c > 0 && (b.tile(c - 1, r) == null || b.tile(c - 1, r).value() == b.tile(c, r).value())){ //左
                    return true;
                 }
-                if (i < b.size() - 1 && b.tile(i + 1, j).value() == b.tile(i, j).value()) {
+                if (c < b.size() - 1 && (b.tile(c + 1, r) == null || b.tile(c + 1, r).value() == b.tile(c, r).value())) { //右
                     return true;
                 }
-                if (j > 0 && b.tile(i, j - 1).value() == b.tile(i, j).value()) {
+                if (r > 0 && (b.tile(c, r - 1) == null || b.tile(c, r - 1).value() == b.tile(c, r).value())) { //下
                     return true;
                 }
-                if (j < b.size() - 1 && b.tile(i, j + 1).value() == b.tile(i, j).value()) {
+                if (r < b.size() - 1 && (b.tile(c, r + 1) == null || b.tile(c, r + 1).value() == b.tile(c, r).value())) { //上
                     return true;
                 }
             }
