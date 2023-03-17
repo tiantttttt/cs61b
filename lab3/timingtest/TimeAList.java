@@ -24,10 +24,11 @@ public class TimeAList {
 
     public static void timeAListConstruction() {
         // TODO: YOUR CODE HERE
+        System.out.println("Timing table for addLast");
         AList<Double> times = new AList<>();
         AList<Integer> Ns = new AList<>();
 
-        for (int n = 1000; n <1000000; n = 2 * n){
+        for (int n = 1000; n <128001; n = 2 * n){
             Ns.addLast(n);
             AList<Integer> testList = new AList<>();
 

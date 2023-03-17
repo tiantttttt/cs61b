@@ -25,6 +25,7 @@ public class TimeSLList {
 
     public static void timeGetLast() {
         // TODO: YOUR CODE HERE
+        System.out.println("Timing table for getLast");
         AList<Integer> Ns = new AList<>();
         AList<Double> times = new AList<>();
         AList<Integer> mLists = new AList<>();
