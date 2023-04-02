@@ -8,36 +8,40 @@ public class ArrayDeque<T> {
     private int startIndex;
     private int endIndex;
     private void copy(T[] temp){
-        if (startIndex == 0){
+        if (startIndex < endIndex){
             System.arraycopy(items, startIndex, temp, 0, size);
+            items = temp;
         }else {
             System.arraycopy(items, startIndex, temp, 0, items.length - startIndex);
             System.arraycopy(items, 0, temp, 0,size - items.length + startIndex);
+            items = temp;
         }
     }
-    private void checkResize() {
-        if (size == items.length){
-            T[] temp = (T[]) new Object[size * 2];
-            copy(temp);
-            startIndex = 0;
-            endIndex = size - 1;
-        } else if (size / items.length < 0.25) {
-            T[] temp = (T[]) new Object[size / 2];
+    private void addCheckResize() {
+        if (size == items.length) {
+            T[] temp = (T[]) new Object[size * 4];
             copy(temp);
             startIndex = 0;
             endIndex = size - 1;
         }
-
+    }
+    private void removeCheckResize() {
+        if (items.length >= 16 && 4 * size < items.length) {
+            T[] temp = (T[]) new Object[items.length / 4];
+            copy(temp);
+            startIndex = 0;
+            endIndex = size - 1;
+        }
     }
     private void addStartIndex(){
-        if (startIndex == 0) {
-            startIndex = items.length - 1;
-        }else {
+        if (startIndex != 0) {
             startIndex--;
+        }else if (size > 0) {
+            startIndex = size - 1;
         }
     }
     private void removeStartIndex(){
-        if (startIndex == items.length - 1 | startIndex == 0) {
+        if (startIndex == items.length - 1) {
             startIndex = 0;
         }else {
             startIndex ++;
@@ -49,14 +53,13 @@ public class ArrayDeque<T> {
         items = (T[]) new Object[8];
     }
     public void addFirst(T item) {
-        checkResize();
+        addCheckResize();
         addStartIndex();
-        items[items.length - 1] = item;
+        items[startIndex] = item;
         size++;
     }
     public void addLast(T item) {
-        checkResize();
-        addStartIndex();
+        addCheckResize();
         items[size] = item;
         endIndex++;
         size++;
@@ -90,10 +93,10 @@ public class ArrayDeque<T> {
         if (size == 0){
             return null;
         }
-        checkResize();
+        removeCheckResize();
         T temp = items[startIndex];
-        removeStartIndex();
         items[startIndex] = null;
+        removeStartIndex();
         size--;
         return temp;
     }
@@ -101,7 +104,7 @@ public class ArrayDeque<T> {
         if (size == 0){
             return null;
         }
-        checkResize();
+        removeCheckResize();
         T temp = items[endIndex];
         items[endIndex] = null;
         endIndex--;
