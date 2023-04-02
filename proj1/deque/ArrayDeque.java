@@ -50,12 +50,14 @@ public class ArrayDeque<T> {
     public ArrayDeque() {
         size = 0;
         startIndex = 0;
+        endIndex = -1;
         items = (T[]) new Object[8];
     }
     public void addFirst(T item) {
         addCheckResize();
         addStartIndex();
         items[startIndex] = item;
+        endIndex++;
         size++;
     }
     public void addLast(T item) {
