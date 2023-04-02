@@ -57,7 +57,9 @@ public class ArrayDeque<T> {
         addCheckResize();
         addStartIndex();
         items[startIndex] = item;
-        endIndex++;
+        if (endIndex == -1){
+            endIndex++;
+        }
         size++;
     }
     public void addLast(T item) {
