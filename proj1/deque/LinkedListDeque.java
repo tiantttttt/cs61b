@@ -3,37 +3,39 @@ package deque;
 import java.util.Iterator;
 
 public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
-    private class Node {
-        private T item;
-        private Node next;
-        private Node pre;
-
-        private  Node(Node p, T i, Node n) {
-            this.item = i;
-            this.next = n;
-            this.pre = p;
-        }
-    }
     private int size;
-    private Node sentinel;
+    private final Node sentinel;
+
+    private class Node {
+        private Node pre;
+        private Node next;
+        private T item;
+    }
 
     public LinkedListDeque() {
+        sentinel = new Node();
         size = 0;
-        sentinel = new Node(sentinel, null, sentinel);
         sentinel.pre = sentinel;
         sentinel.next = sentinel;
+        sentinel.item = null;
     }
     @Override
     public void addFirst(T item) {
         size++;
-        Node newNode = new Node(sentinel, item, sentinel.next);
+        Node newNode = new Node();
+        newNode.pre = sentinel;
+        newNode.item = item;
+        newNode.next = sentinel.next;
         sentinel.next.pre = newNode; //这时候sentinel.next还是原先未改变的。
         sentinel.next = newNode; //改变了sentinel.next
     }
     @Override
     public void addLast(T item) {
         size++;
-        Node newNode = new Node(sentinel.pre, item, sentinel);
+        Node newNode = new Node();
+        newNode.pre = sentinel.pre;
+        newNode.item = item;
+        newNode.next = sentinel;
         sentinel.pre.next = newNode;
         sentinel.pre = newNode;
     }
@@ -94,7 +96,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
 
     public boolean equals(Object o) {
         if (o instanceof Deque && size == ((Deque<?>) o).size()) {
-            for (int i = 0; i < size; i++){
+            for (int i = 0; i < size; i++) {
                 if (!this.get(i).equals(((Deque<?>) o).get(i))) {
                     return false;
                 }
