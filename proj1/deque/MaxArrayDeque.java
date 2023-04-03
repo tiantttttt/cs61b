@@ -1,5 +1,5 @@
 package deque;
 
-public class MaxArrayDeque {
+public class MaxArrayDeque extends ArrayDeque{
 
 }

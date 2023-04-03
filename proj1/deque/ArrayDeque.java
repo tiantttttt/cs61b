@@ -14,7 +14,7 @@ public class ArrayDeque<T> implements Deque<T> {
             items = temp;
         }else {
             System.arraycopy(items, startIndex, temp, 0, items.length - startIndex);
-            System.arraycopy(items, 0, temp, items.length - startIndex, endIndex);
+            System.arraycopy(items, 0, temp, items.length - startIndex, endIndex + 1);
             items = temp;
         }
         startIndex = 0;
