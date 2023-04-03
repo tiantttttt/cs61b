@@ -1,6 +1,8 @@
 package deque;
 
-public class LinkedListDeque<T> implements Deque<T> {
+import java.util.Iterator;
+
+public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
     private class Node {
         private T item;
         private Node next;
@@ -13,12 +15,11 @@ public class LinkedListDeque<T> implements Deque<T> {
         }
     }
     private int size;
-    Node sentinel;
+    private Node sentinel;
 
     public LinkedListDeque() {
         size = 0;
-        T random = (T) new Object();
-        sentinel = new Node(sentinel, random, sentinel);
+        sentinel = new Node(sentinel, null, sentinel);
         sentinel.pre = sentinel;
         sentinel.next = sentinel;
     }
@@ -37,7 +38,7 @@ public class LinkedListDeque<T> implements Deque<T> {
         sentinel.pre = newNode;
     }
     @Override
-    public int size(){
+    public int size() {
         return size;
     }
     @Override
@@ -57,42 +58,42 @@ public class LinkedListDeque<T> implements Deque<T> {
             sentinel.next = sentinel.next.next;
             sentinel.next.pre = sentinel;
             return temp;
-        }else {
+        } else {
             return null;
         }
     }
     @Override
-    public T removeLast(){
+    public T removeLast() {
         if (sentinel.pre != sentinel) {
             size--;
             T temp = sentinel.pre.item;
             sentinel.pre = sentinel.pre.pre;
-            if (size == 0){
+            if (size == 0) {
                 sentinel.next = sentinel;
-            }else {
+            } else {
                 sentinel.pre.next = sentinel;
             }
 
             return temp;
-        }else {
+        } else {
             return null;
         }
     }
     @Override
-    public T get(int index){
+    public T get(int index) {
         Node curNode = sentinel;
         if (index < size) {
-            for (int i = 0; i < index + 1; i++){
+            for (int i = 0; i < index + 1; i++) {
                 curNode = curNode.next;
             }
             return curNode.item;
-        }else {
+        } else {
             return null;
         }
     }
 
-    public boolean equals(Object o){
-        if (o instanceof Deque && size == ((Deque<?>) o).size()){
+    public boolean equals(Object o) {
+        if (o instanceof Deque && size == ((Deque<?>) o).size()) {
             for (int i = 0; i < size; i++){
                 if (!this.get(i).equals(((Deque<?>) o).get(i))) {
                     return false;
@@ -100,6 +101,28 @@ public class LinkedListDeque<T> implements Deque<T> {
                 return true;
             }
         }
-            return false;
+        return false;
+    }
+    public Iterator<T> iterator() {
+        return new LinkedListIterator();
+    }
+
+    private class LinkedListIterator implements Iterator<T> {
+        private Node node;
+
+        LinkedListIterator() {
+            this.node = sentinel.next;
+        }
+
+        public boolean hasNext() {
+            return this.node != sentinel;
+        }
+
+        public T next() {
+            T ret = this.node.item;
+            this.node = this.node.next;
+            return ret;
+        }
+
     }
 }

@@ -7,7 +7,7 @@ public class ArrayDeque<T> implements Deque<T> {
     private int size;
     private int startIndex;
     private int endIndex;
-    private void copy(T[] temp){
+    private void copy(T[] temp) {
         if (startIndex < endIndex) {
             System.arraycopy(items, startIndex, temp, 0, size);
             items = temp;
