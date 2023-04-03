@@ -37,14 +37,17 @@ public class ArrayDeque<T> {
         if (startIndex != 0) {
             startIndex--;
         }else if (size > 0) {
-            startIndex = size - 1;
+            startIndex = items.length - 1;
         }
     }
     private void removeStartIndex(){
-        if (startIndex == items.length - 1) {
+        if (size == 0) {
+            startIndex = 0;
+            endIndex = -1;
+        }else if (startIndex == items.length - 1) {
             startIndex = 0;
         }else {
-            startIndex ++;
+            startIndex++;
         }
     }
     public ArrayDeque() {
@@ -100,8 +103,8 @@ public class ArrayDeque<T> {
         removeCheckResize();
         T temp = items[startIndex];
         items[startIndex] = null;
-        removeStartIndex();
         size--;
+        removeStartIndex();
         return temp;
     }
     public T removeLast() {
@@ -111,8 +114,15 @@ public class ArrayDeque<T> {
         removeCheckResize();
         T temp = items[endIndex];
         items[endIndex] = null;
-        endIndex--;
         size--;
+        if (endIndex == 0 && size != 0) {
+            endIndex = items.length - 1;
+        }else if (size == 0) {
+            endIndex = -1;
+            startIndex = 0;
+        }else {
+            endIndex--;
+        }
         return temp;
     }
     public T get(int index) {

@@ -101,18 +101,47 @@ public class ArrayDequeTest {
     /* Add large number of elements to deque; check if order is correct. */
     public void fillEmptyFill() {
         ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
-        for (int i = 0; i < 8; i++) {
-            lld1.addLast(i);
+        for (int i = 7; i >= 0; i--) {
+            lld1.addFirst(i);
         }
-
-        for (double i = 0; i < 4; i++) {
+        for (double i = 0; i < 8; i++) {
             assertEquals("Should have the same value", i, (double) lld1.removeFirst(), 0.0);
         }
 
-        for (double i = 7; i > 4; i--) {
+        for (int i = 0; i < 8; i++) {
+            lld1.addLast(i);
+        }
+        for (double i = 7; i >= 0; i--) {
             assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
         }
 
+        for (int i = 7; i >= 0; i--) {
+            lld1.addFirst(i);
+        }
+        for (double i = 7; i >= 0; i--) {
+            assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
+        }
+
+        for (int i = 0; i < 8; i++) {
+            lld1.addLast(i);
+        }
+        for (double i = 0; i < 8; i++) {
+            assertEquals("Should have the same value", i, (double) lld1.removeFirst(), 0.0);
+        }
+
+        for (int i = 0; i < 8; i++) {
+            lld1.addLast(i);
+        }
+        for (double i = 7; i >= 0; i--) {
+            assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
+        }
+
+        for (int i = 7; i >= 0; i--) {
+            lld1.addFirst(i);
+        }
+        for (double i = 0; i < 8; i++) {
+            assertEquals("Should have the same value", i, (double) lld1.removeFirst(), 0.0);
+        }
     }
     @Test
     /* Add large number of elements to deque; check if order is correct. */
