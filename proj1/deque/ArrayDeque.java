@@ -1,8 +1,9 @@
 package deque;
 
+import javax.sound.midi.MidiFileFormat;
 import java.util.Iterator;
 
-public class ArrayDeque<T> {
+public class ArrayDeque<T> implements Deque<T> {
     private T[] items;
     private int size;
     private int startIndex;
@@ -16,21 +17,19 @@ public class ArrayDeque<T> {
             System.arraycopy(items, 0, temp, 0,size - items.length + startIndex);
             items = temp;
         }
+        startIndex = 0;
+        endIndex = size - 1;
     }
     private void addCheckResize() {
         if (size == items.length) {
             T[] temp = (T[]) new Object[size * 4];
             copy(temp);
-            startIndex = 0;
-            endIndex = size - 1;
         }
     }
     private void removeCheckResize() {
         if (items.length >= 16 && 4 * size < items.length) {
             T[] temp = (T[]) new Object[items.length / 4];
             copy(temp);
-            startIndex = 0;
-            endIndex = size - 1;
         }
     }
     private void addStartIndex(){
@@ -40,7 +39,7 @@ public class ArrayDeque<T> {
             startIndex = items.length - 1;
         }
     }
-    private void removeStartIndex(){
+    private void removeFirstChangeIndex() {
         if (size == 0) {
             startIndex = 0;
             endIndex = -1;
@@ -50,12 +49,23 @@ public class ArrayDeque<T> {
             startIndex++;
         }
     }
+    private void removeLastChangeIndex() {
+        if (endIndex == 0 && size != 0) {
+            endIndex = items.length - 1;
+        }else if (size == 0) {
+            endIndex = -1;
+            startIndex = 0;
+        }else {
+            endIndex--;
+        }
+    }
     public ArrayDeque() {
         size = 0;
         startIndex = 0;
         endIndex = -1;
         items = (T[]) new Object[8];
     }
+    @Override
     public void addFirst(T item) {
         addCheckResize();
         addStartIndex();
@@ -65,21 +75,24 @@ public class ArrayDeque<T> {
         }
         size++;
     }
+    @Override
+
     public void addLast(T item) {
         addCheckResize();
-        items[size] = item;
-        endIndex++;
+        if (endIndex < items.length - 1){
+            endIndex++;
+            items[endIndex] = item;
+        }else {
+            endIndex = 0;
+            items[endIndex] = item;
+        }
         size++;
     }
-    public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-        return false;
-    }
+    @Override
     public int size(){
         return size;
     }
+    @Override
     public void printDeque() {
         if (startIndex == 0){
             for (int i = 0; i < size; i++) {
@@ -96,6 +109,7 @@ public class ArrayDeque<T> {
             System.out.println();
         }
     }
+    @Override
     public T removeFirst() {
         if (size == 0){
             return null;
@@ -104,9 +118,10 @@ public class ArrayDeque<T> {
         T temp = items[startIndex];
         items[startIndex] = null;
         size--;
-        removeStartIndex();
+        removeFirstChangeIndex();
         return temp;
     }
+    @Override
     public T removeLast() {
         if (size == 0){
             return null;
@@ -115,16 +130,10 @@ public class ArrayDeque<T> {
         T temp = items[endIndex];
         items[endIndex] = null;
         size--;
-        if (endIndex == 0 && size != 0) {
-            endIndex = items.length - 1;
-        }else if (size == 0) {
-            endIndex = -1;
-            startIndex = 0;
-        }else {
-            endIndex--;
-        }
+        removeLastChangeIndex();
         return temp;
     }
+    @Override
     public T get(int index) {
         if (index >= size){
             return null;
@@ -138,7 +147,19 @@ public class ArrayDeque<T> {
         return null;
     }
     public boolean equals(Object o){
-       return true;
+        if (o instanceof ArrayDeque && size == ((ArrayDeque<T>) o).size){
+            T[] temp1 = (T[]) new Object[items.length];
+            T[] temp2 = (T[]) new Object[((ArrayDeque<T>) o).items.length];
+            this.copy(temp1);
+            ((ArrayDeque<T>) o).copy(temp2);
+            for (int i = 0; i < size; i++){
+                if (this.items[i] != ((ArrayDeque<?>) o).items[i]){
+                    return false;
+                }
+                return true;
+            }
+        }
+        return false;
     }
 }
 

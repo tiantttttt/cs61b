@@ -179,4 +179,18 @@ public class ArrayDequeTest {
         }
 
     }
+
+    @Test
+    /* Add large number of elements to deque; check if order is correct. */
+    public void getTest() {
+
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        for (int i = 0; i < 8; i++) {
+            lld1.addLast(i);
+        }
+
+        for (int i = 0; i < 8; i++) {
+            assertEquals("Should have the same value", i, lld1.get(i), 0.0);
+        }
+    }
 }

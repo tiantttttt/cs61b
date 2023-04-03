@@ -2,7 +2,7 @@ package deque;
 
 import java.util.Iterator;
 
-public class LinkedListDeque<T> {
+public class LinkedListDeque<T> implements Deque<T> {
     private class Node {
         public T item;
         public Node next;
@@ -24,28 +24,25 @@ public class LinkedListDeque<T> {
         sentinel.pre = sentinel;
         sentinel.next = sentinel;
     }
+    @Override
     public void addFirst(T item) {
         size++;
         Node newNode = new Node(sentinel, item, sentinel.next);
         sentinel.next.pre = newNode; //这时候sentinel.next还是原先未改变的。
         sentinel.next = newNode; //改变了sentinel.next
     }
+    @Override
     public void addLast(T item) {
         size++;
         Node newNode = new Node(sentinel.pre, item, sentinel);
         sentinel.pre.next = newNode;
         sentinel.pre = newNode;
     }
-    public boolean isEmpty() {
-        if (size == 0){
-            return true;
-        }else {
-            return false;
-        }
-    }
+    @Override
     public int size(){
         return size;
     }
+    @Override
     public void printDeque() {
         Node curNode = sentinel;
         for (int i = 0; i < size; i++) {
@@ -54,6 +51,7 @@ public class LinkedListDeque<T> {
         }
         System.out.println();
     }
+    @Override
     public T removeFirst() {
         if (sentinel.next != sentinel) {
             size--;
@@ -64,6 +62,7 @@ public class LinkedListDeque<T> {
             return null;
         }
     }
+    @Override
     public T removeLast(){
         if (sentinel.pre != sentinel) {
             size--;
@@ -78,6 +77,7 @@ public class LinkedListDeque<T> {
             return null;
         }
     }
+    @Override
     public T get(int index){
         Node curNode = sentinel;
         if (index < size) {
