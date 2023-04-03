@@ -147,17 +147,13 @@ public class ArrayDeque<T> implements Deque<T> {
         return null;
     }
     public boolean equals(Object o){
-        if (o instanceof ArrayDeque && size == ((ArrayDeque<T>) o).size){
-            T[] temp1 = (T[]) new Object[items.length];
-            T[] temp2 = (T[]) new Object[((ArrayDeque<T>) o).items.length];
-            this.copy(temp1);
-            ((ArrayDeque<T>) o).copy(temp2);
+        if (o instanceof Deque && size == ((Deque<?>) o).size()){
             for (int i = 0; i < size; i++){
-                if (this.items[i] != ((ArrayDeque<?>) o).items[i]){
+                if (!this.get(i).equals(((Deque<?>) o).get(i))){
                     return false;
                 }
-                return true;
             }
+            return true;
         }
         return false;
     }
