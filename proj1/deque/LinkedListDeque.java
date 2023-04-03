@@ -1,133 +1,3 @@
-//package deque;
-//
-//import java.util.Iterator;
-//
-//public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
-//    private int size;
-//    private final Node sentinel;
-//
-//    private class Node {
-//        private Node pre;
-//        private Node next;
-//        private T item;
-//    }
-//
-//    public LinkedListDeque() {
-//        sentinel = new Node();
-//        size = 0;
-//        sentinel.pre = sentinel;
-//        sentinel.next = sentinel;
-//        sentinel.item = null;
-//    }
-//    @Override
-//    public void addFirst(T item) {
-//        size++;
-//        Node newNode = new Node();
-//        newNode.pre = sentinel;
-//        newNode.item = item;
-//        newNode.next = sentinel.next;
-//        sentinel.next.pre = newNode; //这时候sentinel.next还是原先未改变的。
-//        sentinel.next = newNode; //改变了sentinel.next
-//    }
-//    @Override
-//    public void addLast(T item) {
-//        size++;
-//        Node newNode = new Node();
-//        newNode.pre = sentinel.pre;
-//        newNode.item = item;
-//        newNode.next = sentinel;
-//        sentinel.pre.next = newNode;
-//        sentinel.pre = newNode;
-//    }
-//    @Override
-//    public int size() {
-//        return size;
-//    }
-//    @Override
-//    public void printDeque() {
-//        Node curNode = sentinel;
-//        for (int i = 0; i < size; i++) {
-//            System.out.print(curNode.next.item + " ");
-//            curNode = curNode.next;
-//        }
-//        System.out.println();
-//    }
-//    @Override
-//    public T removeFirst() {
-//        if (sentinel.next != sentinel) {
-//            size--;
-//            T temp = sentinel.next.item;
-//            sentinel.next = sentinel.next.next;
-//            sentinel.next.pre = sentinel;
-//            return temp;
-//        } else {
-//            return null;
-//        }
-//    }
-//    @Override
-//    public T removeLast() {
-//        if (sentinel.pre != sentinel) {
-//            size--;
-//            T temp = sentinel.pre.item;
-//            sentinel.pre = sentinel.pre.pre;
-//            if (size == 0) {
-//                sentinel.next = sentinel;
-//            } else {
-//                sentinel.pre.next = sentinel;
-//            }
-//
-//            return temp;
-//        } else {
-//            return null;
-//        }
-//    }
-//    @Override
-//    public T get(int index) {
-//        Node curNode = sentinel;
-//        if (index < size) {
-//            for (int i = 0; i < index + 1; i++) {
-//                curNode = curNode.next;
-//            }
-//            return curNode.item;
-//        } else {
-//            return null;
-//        }
-//    }
-//
-//    public boolean equals(Object o) {
-//        if (o instanceof Deque && size == ((Deque<?>) o).size()) {
-//            for (int i = 0; i < size; i++) {
-//                if (!this.get(i).equals(((Deque<?>) o).get(i))) {
-//                    return false;
-//                }
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//    public Iterator<T> iterator() {
-//        return new LinkedListIterator();
-//    }
-//
-//    private class LinkedListIterator implements Iterator<T> {
-//        private Node node;
-//
-//        LinkedListIterator() {
-//            this.node = sentinel.next;
-//        }
-//
-//        public boolean hasNext() {
-//            return this.node != sentinel;
-//        }
-//
-//        public T next() {
-//            T ret = this.node.item;
-//            this.node = this.node.next;
-//            return ret;
-//        }
-//
-//    }
-//}
 package deque;
 
 import java.util.Iterator;
@@ -137,123 +7,104 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
     private final Node sentinel;
 
     private class Node {
-        private Node prev;
+        private Node pre;
         private Node next;
-        private T elem;
+        private T item;
     }
 
     public LinkedListDeque() {
         this.sentinel = new Node();
-        this.sentinel.next = this.sentinel;
-        this.sentinel.prev = this.sentinel;
-        this.sentinel.elem = null;
         this.size = 0;
+        this.sentinel.pre = sentinel;
+        this.sentinel.next = sentinel;
+        this.sentinel.item = null;
     }
-
     @Override
     public void addFirst(T item) {
-        Node p = new Node();
-        p.elem = item;
-        p.next = sentinel.next;
-        p.prev = sentinel;
-        p.next.prev = p;
-        sentinel.next = p;
         size++;
+        Node newNode = new Node();
+        newNode.pre = sentinel;
+        newNode.item = item;
+        newNode.next = sentinel.next;
+        sentinel.next.pre = newNode; //这时候sentinel.next还是原先未改变的。
+        sentinel.next = newNode; //改变了sentinel.next
     }
-
     @Override
     public void addLast(T item) {
-        Node p = new Node();
-        p.elem = item;
-        p.next = sentinel;
-        p.prev = sentinel.prev;
-        p.prev.next = p;
-        sentinel.prev = p;
         size++;
+        Node newNode = new Node();
+        newNode.pre = sentinel.pre;
+        newNode.item = item;
+        newNode.next = sentinel;
+        sentinel.pre.next = newNode;
+        sentinel.pre = newNode;
     }
-
     @Override
     public int size() {
         return size;
     }
-
     @Override
     public void printDeque() {
-        Node p = sentinel.next;
-        while (p.next != sentinel) {
-            System.out.print(p.elem + " ");
-            p = p.next;
+        Node curNode = sentinel;
+        for (int i = 0; i < size; i++) {
+            System.out.print(curNode.next.item + " ");
+            curNode = curNode.next;
         }
         System.out.println();
     }
-
     @Override
     public T removeFirst() {
-        if (sentinel.next == sentinel) {
+        if (sentinel.next != sentinel) {
+            size--;
+            T temp = sentinel.next.item;
+            sentinel.next = sentinel.next.next;
+            sentinel.next.pre = sentinel;
+            return temp;
+        } else {
             return null;
         }
-        Node p = sentinel.next;
-        sentinel.next = p.next;
-        p.next.prev = sentinel;
-        size -= 1;
-        return p.elem;
     }
-
     @Override
     public T removeLast() {
-        if (sentinel.prev == sentinel) {
+        if (sentinel.pre != sentinel) {
+            size--;
+            T temp = sentinel.pre.item;
+            sentinel.pre = sentinel.pre.pre;
+            if (size == 0) {
+                sentinel.next = sentinel;
+            } else {
+                sentinel.pre.next = sentinel;
+            }
+
+            return temp;
+        } else {
             return null;
         }
-        Node p = sentinel.prev;
-        sentinel.prev = p.prev;
-        p.prev.next = sentinel;
-        size -= 1;
-        return p.elem;
     }
-
     @Override
     public T get(int index) {
-        Node p = sentinel.next;
-        while (index != 0 && p != sentinel) {
-            p = p.next;
-            index -= 1;
-        }
-        if (index == 0) {
-            return p.elem;
-        }
-        return null;
-    }
-
-    public T getRecursive(int index) {
-        Node p = sentinel.next;
-        if (index != 0 && p == sentinel) {
+        Node curNode = sentinel;
+        if (index < size) {
+            for (int i = 0; i < index + 1; i++) {
+                curNode = curNode.next;
+            }
+            return curNode.item;
+        } else {
             return null;
         }
-        if (index == 0) {
-            return p.elem;
-        }
-        LinkedListDeque<T> l = new LinkedListDeque<>();
-        l.sentinel.next = p.next;
-        return l.getRecursive(index - 1);
     }
 
-    @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Deque) || ((Deque<?>) o).size() != this.size()) {
-            return false;
-        }
-        if (o == this) {
-            return true;
-        }
-        for (int i = 0; i < this.size(); i++) {
-            Object item = ((Deque<?>) o).get(i);
-            if (!(this.get(i).equals(item))) {
-                return false;
+        if (o instanceof Deque && size == ((Deque<?>) o).size()) {
+            for (int i = 0; i < size; i++) {
+                if (!this.get(i).equals(((Deque<?>) o).get(i))) {
+                    return false;
+                }
+                return true;
             }
         }
-        return true;
+        return false;
     }
-
     public Iterator<T> iterator() {
         return new LinkedListIterator();
     }
@@ -270,10 +121,159 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
         }
 
         public T next() {
-            T ret = this.node.elem;
+            T ret = this.node.item;
             this.node = this.node.next;
             return ret;
         }
 
     }
 }
+//package deque;
+//
+//import java.util.Iterator;
+//
+//public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
+//    private int size;
+//    private final Node sentinel;
+//
+//    private class Node {
+//        private Node prev;
+//        private Node next;
+//        private T elem;
+//    }
+//
+//    public LinkedListDeque() {
+//        this.sentinel = new Node();
+//        this.sentinel.next = this.sentinel;
+//        this.sentinel.prev = this.sentinel;
+//        this.sentinel.elem = null;
+//        this.size = 0;
+//    }
+//
+//    @Override
+//    public void addFirst(T item) {
+//        Node p = new Node();
+//        p.elem = item;
+//        p.next = sentinel.next;
+//        p.prev = sentinel;
+//        p.next.prev = p;
+//        sentinel.next = p;
+//        size++;
+//    }
+//
+//    @Override
+//    public void addLast(T item) {
+//        Node p = new Node();
+//        p.elem = item;
+//        p.next = sentinel;
+//        p.prev = sentinel.prev;
+//        p.prev.next = p;
+//        sentinel.prev = p;
+//        size++;
+//    }
+//
+//    @Override
+//    public int size() {
+//        return size;
+//    }
+//
+//    @Override
+//    public void printDeque() {
+//        Node p = sentinel.next;
+//        while (p.next != sentinel) {
+//            System.out.print(p.elem + " ");
+//            p = p.next;
+//        }
+//        System.out.println();
+//    }
+//
+//    @Override
+//    public T removeFirst() {
+//        if (sentinel.next == sentinel) {
+//            return null;
+//        }
+//        Node p = sentinel.next;
+//        sentinel.next = p.next;
+//        p.next.prev = sentinel;
+//        size -= 1;
+//        return p.elem;
+//    }
+//
+//    @Override
+//    public T removeLast() {
+//        if (sentinel.prev == sentinel) {
+//            return null;
+//        }
+//        Node p = sentinel.prev;
+//        sentinel.prev = p.prev;
+//        p.prev.next = sentinel;
+//        size -= 1;
+//        return p.elem;
+//    }
+//
+//    @Override
+//    public T get(int index) {
+//        Node p = sentinel.next;
+//        while (index != 0 && p != sentinel) {
+//            p = p.next;
+//            index -= 1;
+//        }
+//        if (index == 0) {
+//            return p.elem;
+//        }
+//        return null;
+//    }
+//
+//    public T getRecursive(int index) {
+//        Node p = sentinel.next;
+//        if (index != 0 && p == sentinel) {
+//            return null;
+//        }
+//        if (index == 0) {
+//            return p.elem;
+//        }
+//        LinkedListDeque<T> l = new LinkedListDeque<>();
+//        l.sentinel.next = p.next;
+//        return l.getRecursive(index - 1);
+//    }
+//
+//    @Override
+//    public boolean equals(Object o) {
+//        if (!(o instanceof Deque) || ((Deque<?>) o).size() != this.size()) {
+//            return false;
+//        }
+//        if (o == this) {
+//            return true;
+//        }
+//        for (int i = 0; i < this.size(); i++) {
+//            Object item = ((Deque<?>) o).get(i);
+//            if (!(this.get(i).equals(item))) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+//
+//    public Iterator<T> iterator() {
+//        return new LinkedListIterator();
+//    }
+//
+//    private class LinkedListIterator implements Iterator<T> {
+//        private Node node;
+//
+//        LinkedListIterator() {
+//            this.node = sentinel.next;
+//        }
+//
+//        public boolean hasNext() {
+//            return this.node != sentinel;
+//        }
+//
+//        public T next() {
+//            T ret = this.node.elem;
+//            this.node = this.node.next;
+//            return ret;
+//        }
+//
+//    }
+//}
