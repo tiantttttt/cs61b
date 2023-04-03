@@ -4,11 +4,11 @@ import java.util.Iterator;
 
 public class LinkedListDeque<T> implements Deque<T> {
     private class Node {
-        public T item;
-        public Node next;
-        public Node pre;
+        private T item;
+        private Node next;
+        private Node pre;
 
-        public  Node(Node p, T i, Node n) {
+        private  Node(Node p, T i, Node n) {
             this.item = i;
             this.next = n;
             this.pre = p;
@@ -57,6 +57,7 @@ public class LinkedListDeque<T> implements Deque<T> {
             size--;
             T temp = sentinel.next.item;
             sentinel.next = sentinel.next.next;
+            sentinel.next.pre = sentinel;
             return temp;
         }else {
             return null;
@@ -70,6 +71,8 @@ public class LinkedListDeque<T> implements Deque<T> {
             sentinel.pre = sentinel.pre.pre;
             if (size == 0){
                 sentinel.next = sentinel;
+            }else {
+                sentinel.pre.next = sentinel;
             }
 
             return temp;
