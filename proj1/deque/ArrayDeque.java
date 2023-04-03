@@ -1,6 +1,5 @@
 package deque;
 
-import javax.sound.midi.MidiFileFormat;
 import java.util.Iterator;
 
 public class ArrayDeque<T> implements Deque<T> {
@@ -9,10 +8,10 @@ public class ArrayDeque<T> implements Deque<T> {
     private int startIndex;
     private int endIndex;
     private void copy(T[] temp){
-        if (startIndex < endIndex){
+        if (startIndex < endIndex) {
             System.arraycopy(items, startIndex, temp, 0, size);
             items = temp;
-        }else {
+        } else {
             System.arraycopy(items, startIndex, temp, 0, items.length - startIndex);
             System.arraycopy(items, 0, temp, items.length - startIndex, endIndex + 1);
             items = temp;
@@ -32,10 +31,10 @@ public class ArrayDeque<T> implements Deque<T> {
             copy(temp);
         }
     }
-    private void addStartIndex(){
+    private void addStartIndex() {
         if (startIndex != 0) {
             startIndex--;
-        }else if (size > 0) {
+        } else if (size > 0) {
             startIndex = items.length - 1;
         }
     }
@@ -43,19 +42,19 @@ public class ArrayDeque<T> implements Deque<T> {
         if (size == 0) {
             startIndex = 0;
             endIndex = -1;
-        }else if (startIndex == items.length - 1) {
+        } else if (startIndex == items.length - 1) {
             startIndex = 0;
-        }else {
+        } else {
             startIndex++;
         }
     }
     private void removeLastChangeIndex() {
         if (endIndex == 0 && size != 0) {
             endIndex = items.length - 1;
-        }else if (size == 0) {
+        } else if (size == 0) {
             endIndex = -1;
             startIndex = 0;
-        }else {
+        } else {
             endIndex--;
         }
     }
@@ -70,7 +69,7 @@ public class ArrayDeque<T> implements Deque<T> {
         addCheckResize();
         addStartIndex();
         items[startIndex] = item;
-        if (endIndex == -1){
+        if (endIndex == -1) {
             endIndex++;
         }
         size++;
@@ -79,27 +78,27 @@ public class ArrayDeque<T> implements Deque<T> {
 
     public void addLast(T item) {
         addCheckResize();
-        if (endIndex < items.length - 1){
+        if (endIndex < items.length - 1) {
             endIndex++;
             items[endIndex] = item;
-        }else {
+        } else {
             endIndex = 0;
             items[endIndex] = item;
         }
         size++;
     }
     @Override
-    public int size(){
+    public int size() {
         return size;
     }
     @Override
     public void printDeque() {
-        if (startIndex == 0){
+        if (startIndex == 0) {
             for (int i = 0; i < size; i++) {
                 System.out.print(items[i] + " ");
             }
             System.out.println();
-        }else {
+        } else {
             for (int i = startIndex; i < items.length - startIndex; i++) {
                 System.out.print(items[i] + " ");
             }
@@ -111,7 +110,7 @@ public class ArrayDeque<T> implements Deque<T> {
     }
     @Override
     public T removeFirst() {
-        if (size == 0){
+        if (size == 0) {
             return null;
         }
         removeCheckResize();
@@ -123,7 +122,7 @@ public class ArrayDeque<T> implements Deque<T> {
     }
     @Override
     public T removeLast() {
-        if (size == 0){
+        if (size == 0) {
             return null;
         }
         removeCheckResize();
@@ -135,21 +134,21 @@ public class ArrayDeque<T> implements Deque<T> {
     }
     @Override
     public T get(int index) {
-        if (index >= size){
+        if (index >= size) {
             return null;
-        }else if (startIndex + index < items.length) {
+        } else if (startIndex + index < items.length) {
             return items[startIndex + index];
-        }else {
+        } else {
             return items[startIndex + index - items.length];
         }
     }
-    public Iterator<T> iterator(){
+    public Iterator<T> iterator() {
         return null;
     }
-    public boolean equals(Object o){
-        if (o instanceof Deque && size == ((Deque<?>) o).size()){
-            for (int i = 0; i < size; i++){
-                if (!this.get(i).equals(((Deque<?>) o).get(i))){
+    public boolean equals(Object o) {
+        if (o instanceof Deque && size == ((Deque<?>) o).size()) {
+            for (int i = 0; i < size; i++) {
+                if (!this.get(i).equals(((Deque<?>) o).get(i))) {
                     return false;
                 }
             }
