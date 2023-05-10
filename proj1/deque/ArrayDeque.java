@@ -1,5 +1,7 @@
 package deque;
 
+import org.hamcrest.internal.ArrayIterator;
+
 import java.util.Iterator;
 
 public class ArrayDeque<T> implements Deque<T> {
@@ -142,9 +144,6 @@ public class ArrayDeque<T> implements Deque<T> {
             return items[startIndex + index - items.length];
         }
     }
-    public Iterator<T> iterator() {
-        return null;
-    }
     public boolean equals(Object o) {
         if (o instanceof Deque && size == ((Deque<?>) o).size()) {
             for (int i = 0; i < size; i++) {
@@ -155,6 +154,26 @@ public class ArrayDeque<T> implements Deque<T> {
             return true;
         }
         return false;
+    }
+    @Override
+    public Iterator<T> iterator() {
+        return new ADIterator();
+    }
+    private class ADIterator implements Iterator<T> {
+        public int pos;
+        public ADIterator() {
+            pos = 0;
+        }
+        @Override
+        public boolean hasNext() {
+            return pos < size;
+        }
+
+        @Override
+        public T next() {
+            pos++;
+            return items[pos - 1];
+        }
     }
 }
 

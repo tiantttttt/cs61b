@@ -1,6 +1,9 @@
 package deque;
 
 import org.junit.Test;
+
+import java.util.Iterator;
+
 import static org.junit.Assert.*;
 
 
@@ -121,7 +124,6 @@ public class LinkedListDequeTest {
     @Test
     /* Add large number of elements to deque; check if order is correct. */
     public void getTest() {
-
         LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
         for (int i = 0; i < 8; i++) {
             lld1.addLast(i);
@@ -130,5 +132,39 @@ public class LinkedListDequeTest {
         for (int i = 0; i < 8; i++) {
             assertEquals("Should have the same value", i, lld1.get(i), 0.0);
         }
+    }
+
+    @Test
+    /* Add large number of elements to deque; check if order is correct. */
+    public void getRecursiveTest() {
+        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+        for (int i = 0; i < 8; i++) {
+            lld1.addLast(i);
+        }
+
+        for (int i = 0; i < 8; i++) {
+            assertEquals("Should have the same value", i, lld1.getRecursive(i), 0.0);
+        }
+    }
+    @Test
+    /* Add large number of elements to deque; check if order is correct. */
+    public void iteratorTest() {
+        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+        for (int i = 0; i < 8; i++) {
+            lld1.addLast(i);
+        }
+        for (int j : lld1) {
+            assertEquals("Should have the same value", j, lld1.getRecursive(j), 0.0);
+        }
+    }
+    @Test
+    public void hasNextTest() {
+        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+        for (int i = 0; i < 2; i++) {
+            lld1.addLast(i);
+        }
+        Iterator<Integer> seer = lld1.iterator();
+        seer.next();
+        assertEquals(true, seer.hasNext());
     }
 }
