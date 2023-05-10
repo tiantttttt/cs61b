@@ -1,7 +1,5 @@
 package deque;
 
-import org.hamcrest.internal.ArrayIterator;
-
 import java.util.Iterator;
 
 public class ArrayDeque<T> implements Deque<T> {
